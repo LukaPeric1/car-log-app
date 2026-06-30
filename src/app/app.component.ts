@@ -33,14 +33,19 @@ import { CarLogService, CarLog } from './services/car-log.service';
   // Ucitavanje podataka iz Firebase-a
   loadLogs() {
     this.carLogService.getLogs().subscribe({
-      next: (snapshot) => {
-        if (snapshot && snapshot.value) {
-          // Firebase vraca podatke kao objekat objekata, pa ih konvertujemo u niz
-          const data = snapshot.value;
-          this.carLogs = Object.keys(data).map(key => ({
-            id: key,
-            ...data[key]
-          }));
+      next: (action) => {
+        // @angular/fire v17 object() vraca objekat koji sadrzi snapshot
+        if (action && action.snapshot) {
+          const data = action.snapshot.val(); // Ovako se ispravno uzimaju podaci iz Realtime DB
+          
+          if (data) {
+            this.carLogs = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key]
+            }));
+          } else {
+            this.carLogs = [];
+          }
         } else {
           this.carLogs = [];
         }
