@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Database, ref, set, push, object, remove, update } from '@angular/fire/database';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment.development';
 
-// Definišemo interfejs kako bi TypeScript znao strukturu našeg automobila/loga
 export interface CarLog {
   id?: string;
   brand: string;
   model: string;
   vin?: string;
-  serviceType: string; // npr. Mali servis, Veliki servis, Trap, Dijagnostika...
+  serviceType: string;
   description: string;
   mileage: number;
   date: string;
@@ -18,32 +19,37 @@ export interface CarLog {
   providedIn: 'root'
 })
 export class CarLogService {
+  private baseUrl = environment.databaseUrl;
 
-  constructor(private db: Database) { }
+  constructor(private http: HttpClient) { }
 
-  // 1. CREATE - Dodavanje novog loga u bazu
-  createLog(log: CarLog): Promise<void> {
-    const dbRef = ref(this.db, 'car-logs');
-    const newLogRef = push(dbRef); // Generiše jedinstveni Firebase ID (kluč)
-    log.id = newLogRef.key || undefined;
-    return set(newLogRef, log);
+  // 1. CREATE (POST) - Firebase pri POST zahtevu sam generiše ID i vraća objekat { name: "ID" }
+  createLog(log: CarLog): Observable<any> {
+    return this.http.post(`${this.baseUrl}/car-logs.json`, log);
   }
 
-  // 2. READ - Preuzimanje svih logova iz baze (vraća Observable)
-  getLogs(): Observable<any> {
-    const dbRef = ref(this.db, 'car-logs');
-    return object(dbRef); // Prati izmene u realnom vremenu
+  // 2. READ (GET) - Povlači sve zapise
+  getLogs(): Observable<CarLog[]> {
+    return this.http.get<{ [key: string]: CarLog }>(`${this.baseUrl}/car-logs.json`).pipe(
+      map(responseData => {
+        const logsArray: CarLog[] = [];
+        for (const key in responseData) {
+          if (responseData.hasOwnProperty(key)) {
+            logsArray.push({ id: key, ...responseData[key] });
+          }
+        }
+        return logsArray;
+      })
+    );
   }
 
-  // 3. UPDATE - Izmena postojećeg loga
-  updateLog(id: string, log: Partial<CarLog>): Promise<void> {
-    const dbRef = ref(this.db, `car-logs/${id}`);
-    return update(dbRef, log);
+  // 3. UPDATE (PUT)
+  updateLog(id: string, log: Partial<CarLog>): Observable<any> {
+    return this.http.put(`${this.baseUrl}/car-logs/${id}.json`, log);
   }
 
-  // 4. DELETE - Brisanje loga iz baze
-  deleteLog(id: string): Promise<void> {
-    const dbRef = ref(this.db, `car-logs/${id}`);
-    return remove(dbRef);
+  // 4. DELETE (DELETE)
+  deleteLog(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/car-logs/${id}.json`);
   }
 }

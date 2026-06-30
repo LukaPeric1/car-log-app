@@ -7,55 +7,62 @@
     <h3 style="margin-top: 0; color: #444;">Dodaj novi zapis o servisu</h3>
     
     <form (ngSubmit)="onSubmit()" #carForm="ngForm">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 20px;">
+        
         <div>
-          <label style="display:block; margin-bottom:5px; font-weight:bold;">Marka:</label>
-          <input type="text" [(ngModel)]="newLog.brand" name="brand" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; margin-bottom:5px; font-weight:bold;">Marka:</label>
+            <input type="text" [(ngModel)]="newLog.brand" name="brand" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; margin-bottom:5px; font-weight:bold;">Broj šasije (VIN):</label>
+            <input type="text" [(ngModel)]="newLog.vin" name="vin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; margin-bottom:5px; font-weight:bold;">Kilometraža:</label>
+            <input type="number" [(ngModel)]="newLog.mileage" name="mileage" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
+          </div>
         </div>
         
         <div>
-          <label style="display:block; margin-bottom:5px; font-weight:bold;">Model:</label>
-          <input type="text" [(ngModel)]="newLog.model" name="model" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; margin-bottom:5px; font-weight:bold;">Model:</label>
+            <input type="text" [(ngModel)]="newLog.model" name="model" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; margin-bottom:5px; font-weight:bold;">Tip servisa:</label>
+            <select [(ngModel)]="newLog.serviceType" name="serviceType" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box; background: white;">
+              <option value="Mali servis">Mali servis</option>
+              <option value="Veliki servis">Veliki servis</option>
+              <option value="Popravka kvara">Popravka kvara</option>
+              <option value="Dijagnostika">Dijagnostika</option>
+            </select>
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; margin-bottom:5px; font-weight:bold;">Datum servisa:</label>
+            <input type="date" [(ngModel)]="newLog.date" name="date" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
+          </div>
         </div>
+
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-        <div>
-          <label style="display:block; margin-bottom:5px; font-weight:bold;">Broj šasije (VIN):</label>
-          <input type="text" [(ngModel)]="newLog.vin" name="vin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
-        </div>
-        
-        <div>
-          <label style="display:block; margin-bottom:5px; font-weight:bold;">Tip servisa:</label>
-          <select [(ngModel)]="newLog.serviceType" name="serviceType" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
-            <option value="Mali servis">Mali servis</option>
-            <option value="Veliki servis">Veliki servis</option>
-            <option value="Popravka kvara">Popravka kvara</option>
-            <option value="Dijagnostika">Dijagnostika</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-        <div>
-          <label style="display:block; margin-bottom:5px; font-weight:bold;">Kilometraža:</label>
-          <input type="number" [(ngModel)]="newLog.mileage" name="mileage" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
-        </div>
-        
-        <div>
-          <label style="display:block; margin-bottom:5px; font-weight:bold;">Datum servisa:</label>
-          <input type="date" [(ngModel)]="newLog.date" name="date" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px;">
-        </div>
-      </div>
-
-      <div style="margin-bottom: 15px;">
+      <div style="margin-bottom: 20px;">
         <label style="display:block; margin-bottom:5px; font-weight:bold;">Opis radova:</label>
-        <textarea [(ngModel)]="newLog.description" name="description" rows="3" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; resize:vertical;"></textarea>
+        <textarea [(ngModel)]="newLog.description" name="description" rows="3" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; resize:vertical; box-sizing: border-box;"></textarea>
       </div>
 
-      <button type="submit" style="background:#28a745; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:16px; width:100%;">
-        Sačuvaj u bazu podataka
+      <button type="submit" style="background:#28a745; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:16px; width:100%; font-weight:bold;">
+        {{ isEditing ? 'Sačuvaj izmene (Ažuriraj)' : 'Sačuvaj u bazu podataka' }}
       </button>
+
+      @if (isEditing) {
+        <button type="button" (click)="cancelEdit()" style="background:#6c757d; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:16px; width:100%; font-weight:bold; margin-top:10px;">
+          Otkaži izmenu
+        </button>}
     </form>
   </div>
 
@@ -70,22 +77,28 @@
     }
 
     @for (log of carLogs; track log.id) {
-      <div style="background: white; border: 1px solid #ddd; border-radius: 6px; padding: 15px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative;">
-        <button (click)="onDelete(log.id)" style="position: absolute; top: 15px; right: 15px; background: #dc3545; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">
-          Obriši
-        </button>
+      <div style="background: white; border: 1px solid #ddd; border-radius: 6px; padding: 18px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative;">
         
-        <h4 style="margin: 0 0 10px 0; color: #007bff; font-size: 18px;">
+        <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
+          <button (click)="onEdit(log)" style="background: #ffc107; color: #212529; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-weight: bold; transition: 0.2s;">
+            Izmeni
+          </button>
+          <button (click)="onDelete(log.id)" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-weight: bold; transition: 0.2s;">
+            Obriši
+          </button>
+        </div>
+        
+        <h4 style="margin: 0 0 10px 0; color: #007bff; font-size: 18px; padding-right: 160px;">
           {{ log.brand }} {{ log.model }} <span style="font-size: 13px; color: #666; font-weight: normal;">({{ log.serviceType }})</span>
         </h4>
         
-        <p style="margin: 5px 0;"><strong>Datum:</strong> {{ log.date }} | <strong>Kilometraža:</strong> {{ log.mileage }} km</p>
+        <p style="margin: 5px 0; color: #444;"><strong>Datum:</strong> {{ log.date }} | <strong>Kilometraža:</strong> {{ log.mileage }} km</p>
         
         @if (log.vin) {
-          <p style="margin: 5px 0;"><strong>VIN:</strong> {{ log.vin }}</p>
+          <p style="margin: 5px 0; color: #444;"><strong>VIN:</strong> {{ log.vin }}</p>
         }
         
-        <p style="margin: 10px 0 0 0; color: #555; background: #f9f9f9; padding: 8px; border-left: 3px solid #007bff;">
+        <p style="margin: 15px 0 0 0; color: #555; background: #fafafa; padding: 12px; border-left: 4px solid #007bff; border-top: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee; border-radius: 0 4px 4px 0; font-size: 14px;">
           {{ log.description || 'Nema opisa.' }}
         </p>
       </div>
