@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ isEditing ? 'Izmeni servisni zapis' : 'Novi zapis o servisu' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="max-width: 900px; margin: 20px auto; background: var(--ion-card-background, #fff); padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    
+    <form (ngSubmit)="onSubmit()">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 20px;">
+        
+        <div>
+          <ion-item fill="outline" mode="md" style="margin-bottom: 15px;">
+            <ion-input label="Marka:" labelPlacement="stacked" type="text" [(ngModel)]="newLog.brand" name="brand" required></ion-input>
+          </ion-item>
+          
+          <ion-item fill="outline" mode="md" style="margin-bottom: 15px;">
+            <ion-input label="Broj šasije (VIN):" labelPlacement="stacked" type="text" [(ngModel)]="newLog.vin" name="vin"></ion-input>
+          </ion-item>
+          
+          <ion-item fill="outline" mode="md" style="margin-bottom: 15px;">
+            <ion-input label="Kilometraža:" labelPlacement="stacked" type="number" [(ngModel)]="newLog.mileage" name="mileage"></ion-input>
+          </ion-item>
+        </div>
+        
+        <div>
+          <ion-item fill="outline" mode="md" style="margin-bottom: 15px;">
+            <ion-input label="Model:" labelPlacement="stacked" type="text" [(ngModel)]="newLog.model" name="model" required></ion-input>
+          </ion-item>
+          
+          <ion-item fill="outline" mode="md" style="margin-bottom: 15px;">
+            <ion-select label="Tip servisa:" labelPlacement="stacked" [(ngModel)]="newLog.serviceType" name="serviceType">
+              <ion-select-option value="Mali servis">Mali servis</ion-select-option>
+              <ion-select-option value="Veliki servis">Veliki servis</ion-select-option>
+              <ion-select-option value="Popravka kvara">Popravka kvara</ion-select-option>
+              <ion-select-option value="Dijagnostika">Dijagnostika</ion-select-option>
+            </ion-select>
+          </ion-item>
+          
+          <ion-item fill="outline" mode="md" style="margin-bottom: 15px;">
+            <ion-input label="Datum servisa:" labelPlacement="stacked" type="date" [(ngModel)]="newLog.date" name="date"></ion-input>
+          </ion-item>
+        </div>
+
+      </div>
+
+      <ion-item fill="outline" mode="md" style="margin-bottom: 25px;">
+        <ion-textarea label="Opis radova:" labelPlacement="stacked" [(ngModel)]="newLog.description" name="description" [rows]="3"></ion-textarea>
+      </ion-item>
+
+      <ion-button type="submit" color="success" expand="block" size="large">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        {{ isEditing ? 'Sačuvaj izmene' : 'Sačuvaj u bazu podataka' }}
+      </ion-button>
+
+      @if (isEditing) {
+        <ion-button type="button" color="medium" expand="block" style="margin-top: 10px;" (click)="cancelEdit()">
+          <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+          Otkaži izmenu
+        </ion-button>
+      }
+    </form>
+  </div>
+</ion-content>

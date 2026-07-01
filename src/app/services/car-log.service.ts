@@ -20,7 +20,7 @@ export interface CarLog {
 })
 export class CarLogService {
   private baseUrl = environment.databaseUrl;
-
+  private logToEdit: CarLog | null = null;
   constructor(private http: HttpClient) { }
 
   // 1. CREATE (POST) - Firebase pri POST zahtevu sam generiše ID i vraća objekat { name: "ID" }
@@ -52,4 +52,11 @@ export class CarLogService {
   deleteLog(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/car-logs/${id}.json`);
   }
+  setLogToEdit(log: CarLog | null) {
+  this.logToEdit = log;
+}
+
+getLogToEdit() {
+  return this.logToEdit;
+}
 }

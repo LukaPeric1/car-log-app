@@ -1,108 +1,26 @@
-<div style="max-width: 900px; margin: 40px auto; padding: 20px; font-family: Arial, sans-serif;">
-  
-  <h2 style="text-align: center; color: #333;">🚗 Car Log Application - Firebase Realtime DB</h2>
-  
-  <!-- FORMA ZA UNOS -->
-  <div style="background: #f4f6f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-    <h3 style="margin-top: 0; color: #444;">Dodaj novi zapis o servisu</h3>
+<ion-app>
+  <ion-content>
+    <router-outlet></router-outlet>
+  </ion-content>
+
+  <ion-tab-bar slot="bottom" style="--background: #222; border-top: 1px solid #444;">
     
-    <form (ngSubmit)="onSubmit()" #carForm="ngForm">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 20px;">
-        
-        <div>
-          <div style="margin-bottom: 15px;">
-            <label style="display:block; margin-bottom:5px; font-weight:bold;">Marka:</label>
-            <input type="text" [(ngModel)]="newLog.brand" name="brand" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
-          </div>
-          
-          <div style="margin-bottom: 15px;">
-            <label style="display:block; margin-bottom:5px; font-weight:bold;">Broj šasije (VIN):</label>
-            <input type="text" [(ngModel)]="newLog.vin" name="vin" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
-          </div>
-          
-          <div style="margin-bottom: 15px;">
-            <label style="display:block; margin-bottom:5px; font-weight:bold;">Kilometraža:</label>
-            <input type="number" [(ngModel)]="newLog.mileage" name="mileage" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
-          </div>
-        </div>
-        
-        <div>
-          <div style="margin-bottom: 15px;">
-            <label style="display:block; margin-bottom:5px; font-weight:bold;">Model:</label>
-            <input type="text" [(ngModel)]="newLog.model" name="model" required style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
-          </div>
-          
-          <div style="margin-bottom: 15px;">
-            <label style="display:block; margin-bottom:5px; font-weight:bold;">Tip servisa:</label>
-            <select [(ngModel)]="newLog.serviceType" name="serviceType" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box; background: white;">
-              <option value="Mali servis">Mali servis</option>
-              <option value="Veliki servis">Veliki servis</option>
-              <option value="Popravka kvara">Popravka kvara</option>
-              <option value="Dijagnostika">Dijagnostika</option>
-            </select>
-          </div>
-          
-          <div style="margin-bottom: 15px;">
-            <label style="display:block; margin-bottom:5px; font-weight:bold;">Datum servisa:</label>
-            <input type="date" [(ngModel)]="newLog.date" name="date" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box;">
-          </div>
-        </div>
+    <ion-tab-button tab="forma" routerLink="/nova-forma" routerLinkActive="active-tab" style="--color: #bbb;">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <ion-label style="font-weight: bold;">Nova Forma</ion-label>
+    </ion-tab-button>
 
-      </div>
+    <ion-tab-button tab="istorija" routerLink="/istorija" routerLinkActive="active-tab" style="--color: #bbb;">
+      <ion-icon name="list-outline"></ion-icon>
+      <ion-label style="font-weight: bold;">Istorija Zapisa</ion-label>
+    </ion-tab-button>
 
-      <div style="margin-bottom: 20px;">
-        <label style="display:block; margin-bottom:5px; font-weight:bold;">Opis radova:</label>
-        <textarea [(ngModel)]="newLog.description" name="description" rows="3" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; resize:vertical; box-sizing: border-box;"></textarea>
-      </div>
+  </ion-tab-bar>
+</ion-app>
 
-      <button type="submit" style="background:#28a745; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:16px; width:100%; font-weight:bold;">
-        {{ isEditing ? 'Sačuvaj izmene (Ažuriraj)' : 'Sačuvaj u bazu podataka' }}
-      </button>
-
-      @if (isEditing) {
-        <button type="button" (click)="cancelEdit()" style="background:#6c757d; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:16px; width:100%; font-weight:bold; margin-top:10px;">
-          Otkaži izmenu
-        </button>}
-    </form>
-  </div>
-
-  <!-- PRIKAZ ZAPISA -->
-  <div>
-    <h3 style="color: #444;">Istorija servisnih zapisa ({{ carLogs.length }})</h3>
-    
-    @if (carLogs.length === 0) {
-      <div style="text-align:center; color:#777; padding:20px; border: 1px dashed #ccc;">
-        Trenutno nema sačuvanih zapisa. Unesite prvi auto iznad!
-      </div>
-    }
-
-    @for (log of carLogs; track log.id) {
-      <div style="background: white; border: 1px solid #ddd; border-radius: 6px; padding: 18px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative;">
-        
-        <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px;">
-          <button (click)="onEdit(log)" style="background: #ffc107; color: #212529; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-weight: bold; transition: 0.2s;">
-            Izmeni
-          </button>
-          <button (click)="onDelete(log.id)" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer; font-weight: bold; transition: 0.2s;">
-            Obriši
-          </button>
-        </div>
-        
-        <h4 style="margin: 0 0 10px 0; color: #007bff; font-size: 18px; padding-right: 160px;">
-          {{ log.brand }} {{ log.model }} <span style="font-size: 13px; color: #666; font-weight: normal;">({{ log.serviceType }})</span>
-        </h4>
-        
-        <p style="margin: 5px 0; color: #444;"><strong>Datum:</strong> {{ log.date }} | <strong>Kilometraža:</strong> {{ log.mileage }} km</p>
-        
-        @if (log.vin) {
-          <p style="margin: 5px 0; color: #444;"><strong>VIN:</strong> {{ log.vin }}</p>
-        }
-        
-        <p style="margin: 15px 0 0 0; color: #555; background: #fafafa; padding: 12px; border-left: 4px solid #007bff; border-top: 1px solid #eee; border-right: 1px solid #eee; border-bottom: 1px solid #eee; border-radius: 0 4px 4px 0; font-size: 14px;">
-          {{ log.description || 'Nema opisa.' }}
-        </p>
-      </div>
-    }
-  </div>
-
-</div>
+<style>
+  /* Boja za aktivnu karticu u meniju */
+  .active-tab {
+    --color: #3880ff !important; /* Ionic plava ili stavi #28a745 ako želiš zelenu */
+  }
+</style>

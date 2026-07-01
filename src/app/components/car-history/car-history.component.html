@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Istorija servisnih zapisa ({{ carLogs.length }})</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="max-width: 900px; margin: 0 auto;">
+    
+    @if (carLogs.length === 0) {
+      <div style="text-align:center; color:#777; padding:40px; border: 2px dashed #ccc; border-radius: 8px; margin-top: 20px;">
+        Trenutno nema sačuvanih zapisa u bazi. Otvorite tab "Nova forma" da dodate prvi auto!
+      </div>
+    }
+
+    @for (log of carLogs; track log.id) {
+      <ion-card style="position: relative; margin-bottom: 15px;">
+        
+        <div style="position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; z-index: 10;">
+          <ion-button color="warning" size="small" (click)="onEdit(log)">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button color="danger" size="small" (click)="onDelete(log.id)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <ion-card-header style="padding-right: 110px;">
+          <ion-card-title color="primary" style="font-size: 20px; font-weight: bold;">
+            {{ log.brand }} {{ log.model }}
+          </ion-card-title>
+          <ion-card-subtitle style="font-size: 14px; font-weight: 500; margin-top: 4px;">
+            🛞 {{ log.serviceType }}
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <p style="font-size: 14px; margin-bottom: 6px; color: #555;">
+            📅 <strong>Datum:</strong> {{ log.date }} &nbsp;|&nbsp; 📊 <strong>Kilometraža:</strong> {{ log.mileage }} km
+          </p>
+          @if (log.vin) {
+            <p style="font-size: 14px; margin-bottom: 12px; color: #555;">
+              🆔 <strong>VIN:</strong> {{ log.vin }}
+            </p>
+          }
+          
+          <div style="background: #f8f9fa; padding: 12px; border-left: 4px solid var(--ion-color-primary, #3880ff); border-radius: 0 4px 4px 0; margin-top: 10px; font-size: 14px; color: #222;">
+            {{ log.description || 'Nema opisa radova.' }}
+          </div>
+        </ion-card-content>
+
+      </ion-card>
+    }
+
+  </div>
+</ion-content>
